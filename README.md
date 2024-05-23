@@ -17,5 +17,6 @@ export COMPOSE_PROJECT_NAME=myproject
 после этого запускать как обычно.
 
 
+
 initial root password gitlab
 sudo docker exec -it <container_name> grep 'Password:' /etc/gitlab/initial_root_password
