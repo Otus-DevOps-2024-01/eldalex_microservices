@@ -15,3 +15,8 @@ docker-compose -p myproject up -d
 export COMPOSE_PROJECT_NAME=myproject
 или прописать в .env проекта
 после этого запускать как обычно.
+
+
+
+initial root password gitlab
+sudo docker exec -it <container_name> grep 'Password:' /etc/gitlab/initial_root_password
