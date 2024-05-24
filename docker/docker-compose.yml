@@ -8,7 +8,7 @@ services:
       - back_net
 
   ui:
-    build: ./ui
+    build: ../src/ui
     image: ${USERNAME}/ui:${UIVERS}
     ports:
       - ${UIPORT}:9292/tcp
@@ -16,14 +16,14 @@ services:
       - front_net
 
   post:
-    build: ./post-py
+    build: ../src/post-py
     image: ${USERNAME}/post:1.0
     networks:
       - back_net
       - front_net
 
   comment:
-    build: ./comment
+    build: ../src/comment
     image: ${USERNAME}/comment:1.0
     expose:
       - 9292
