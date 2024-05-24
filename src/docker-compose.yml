@@ -6,6 +6,7 @@ services:
       - post_db:/data/db
     networks:
       - back_net
+
   ui:
     build: ./ui
     image: ${USERNAME}/ui:${UIVERS}
@@ -13,21 +14,55 @@ services:
       - ${UIPORT}:9292/tcp
     networks:
       - front_net
+
   post:
     build: ./post-py
     image: ${USERNAME}/post:1.0
     networks:
       - back_net
       - front_net
+
   comment:
     build: ./comment
     image: ${USERNAME}/comment:1.0
+    expose:
+      - 9292
+    networks:
+      - back_net
+      - front_net
+
+  prometheus:
+    image: ${USERNAME}/prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus_data:/prometheus
+    command: # Передаем доп параметры в командной строке
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d' 
+    networks:
+      - back_net
+      - front_net
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
     networks:
       - back_net
       - front_net
 
 volumes:
   post_db:
+  prometheus_data:
 
 networks:
   front_net:
